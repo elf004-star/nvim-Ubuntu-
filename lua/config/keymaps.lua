@@ -30,3 +30,35 @@ vim.keymap.set("v", "S", "<Plug>VSurround", { desc = "Surround selection", remap
 
 -- jk绑定ESC
 vim.keymap.set("i", "jk", "<Esc>", { desc = "jk to ESC", remap = true, silent = true })
+
+-- ============================================
+-- Ctrl+] 跳出括号
+-- ============================================
+-- 在插入模式下按 Ctrl+] 跳到下一个闭合括号/引号之后
+local function jump_out_of_bracket()
+  local line = vim.api.nvim_get_current_line()
+  local col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- 转为1-indexed
+  local brackets = { ")", "]", "}", ">", '"', "'", "`" }
+
+  -- 在当前光标之后查找最近的闭合括号
+  local nearest_pos = nil
+  for i = col, #line do
+    local char = line:sub(i, i)
+    for _, b in ipairs(brackets) do
+      if char == b then
+        nearest_pos = i
+        break
+      end
+    end
+    if nearest_pos then
+      break
+    end
+  end
+
+  if nearest_pos then
+    -- 移动光标到括号之后
+    vim.api.nvim_win_set_cursor(0, { vim.api.nvim_win_get_cursor(0)[1], nearest_pos })
+  end
+end
+
+vim.keymap.set("i", "<C-]>", jump_out_of_bracket, { noremap = true, silent = true, desc = "Jump out of bracket" })
