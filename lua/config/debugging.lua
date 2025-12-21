@@ -228,7 +228,7 @@ vim.list_extend(dap.configurations.python, {
 })
 dap.configurations.qmt = dap.configurations.python
 
-require("nvim-dap-virtual-text").setup({})
+require("nvim-dap-virtual-text").setup()
 local ok, noice = pcall(require, "noice")
 if ok then
   noice.setup()
@@ -279,15 +279,12 @@ dapui.setup({
 
 -- Custom breakpoint icons
 vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DapBreakpoint", linehl = "", numhl = "DapBreakpoint" })
-vim.fn.sign_define(
-  "DapBreakpointCondition",
-  {
-    text = "",
-    texthl = "DapBreakpointCondition",
-    linehl = "DapBreakpointCondition",
-    numhl = "DapBreakpointCondition",
-  }
-)
+vim.fn.sign_define("DapBreakpointCondition", {
+  text = "",
+  texthl = "DapBreakpointCondition",
+  linehl = "DapBreakpointCondition",
+  numhl = "DapBreakpointCondition",
+})
 vim.fn.sign_define("DapStopped", { text = "", texthl = "DapStopped", linehl = "DapStopped", numhl = "DapStopped" })
 
 -- keymaps
