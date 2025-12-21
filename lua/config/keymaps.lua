@@ -62,3 +62,8 @@ local function jump_out_of_bracket()
 end
 
 vim.keymap.set("i", "<C-]>", jump_out_of_bracket, { noremap = true, silent = true, desc = "Jump out of bracket" })
+
+-- 在插入模式下使用 Ctrl+Z 撤销
+vim.keymap.set("i", "<C-z>", "<cmd>undo<cr>", { desc = "Undo" })
+-- 在插入模式下使用 Ctrl+Y 重做
+vim.keymap.set("i", "<C-m>", "<cmd>redo<cr>", { desc = "Redo" })
