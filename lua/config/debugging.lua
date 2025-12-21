@@ -1,4 +1,5 @@
 local dap = require("dap")
+local dapui = require("dapui") -- 修正 1 & 2: 确保 dapui 在这里使用 local 声明一次
 
 -- NOTE: configure adapters
 dap.adapters.codelldb = {
@@ -228,7 +229,8 @@ vim.list_extend(dap.configurations.python, {
 })
 dap.configurations.qmt = dap.configurations.python
 
-require("nvim-dap-virtual-text").setup()
+-- 修正 3: 确保 nvim-dap-virtual-text.setup 传入参数
+require("nvim-dap-virtual-text").setup({})
 local ok, noice = pcall(require, "noice")
 if ok then
   noice.setup()
@@ -236,7 +238,7 @@ end
 
 local custom_utils = require("config.utils")
 -- UI responsiveness
-local dap, dapui = require("dap"), require("dapui")
+
 dap.listeners.before.attach.dapui_config = function()
   dapui.open({ reset = true })
   custom_utils.reset_overseerlist_width()
@@ -255,6 +257,57 @@ end
 -- customize UI layout
 dapui.setup({
   expand_lines = false,
+  -- 修正 4, 5, 6, 7: 添加所有 LSP 严格类型检查缺失的字段
+  floating = {
+    max_height = 0.9,
+    max_width = 0.9,
+    border = "single",
+    mappings = {},
+    buf_options = {},
+    win_options = {},
+  },
+  controls = {
+    enabled = true,
+    icons = {
+      pause = "",
+      play = "",
+      step_into = "",
+      step_over = "",
+      step_out = "",
+      step_back = "",
+      run_last = "",
+      terminate = "",
+    },
+    element = "repl", -- 最终修正：将值从 table {} 改为 string "repl"
+  },
+  render = {
+    max_type_length = nil,
+    max_value_lines = nil,
+    indent = 2, -- **修正 6：添加缺失的 'indent' 字段**
+  },
+  mappings = {},
+  element_mappings = {},
+  force_buffers = true,
+  map = {},
+  icons = {
+    expanded = "",
+    collapsed = "",
+    current_frame = "",
+    DAP_BREAKPOINT = "",
+    DAP_BREAKPOINT_COND = "",
+    DAP_BREAKPOINT_ERR = "",
+    DAP_LOGPOINT = "",
+    DAP_WATCH = "",
+    DAP_SCOPE = "",
+    DAP_STEP_INTO = "",
+    DAP_STEP_OVER = "",
+    DAP_STEP_OUT = "",
+    DAP_RUN = "",
+    DAP_CONTINUE = "",
+    DAP_PAUSE = "",
+    DAP_TERMINATE = "",
+  },
+
   layouts = {
     {
       position = "left",
