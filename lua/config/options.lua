@@ -1,6 +1,12 @@
 -- Options are automatically loaded before lazy.nvim startup
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
+
+-- 缩进设置：4个空格
+vim.opt.shiftwidth = 4  -- 自动缩进使用的空格数
+vim.opt.tabstop = 4     -- Tab 键显示的宽度
+vim.opt.expandtab = true -- 将 Tab 转换为空格
+
 -- 全局禁用拼写检查
 vim.opt.spell = false
 

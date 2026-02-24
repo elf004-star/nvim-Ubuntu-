@@ -27,6 +27,7 @@ vim.keymap.set("i", "<C-v>", "<C-r>+", { noremap = true, silent = true, desc = "
 -- ============================================
 -- 禁用 flash 的 S 键映射，确保 vim-surround 的 S 键可以正常工作
 vim.keymap.set("v", "S", "<Plug>VSurround", { desc = "Surround selection", remap = true, silent = true })
+vim.keymap.set("v", "s", "<Plug>VSurround", { desc = "Surround selection", remap = true, silent = true })
 
 -- jk绑定ESC
 vim.keymap.set("i", "jk", "<Esc>", { desc = "jk to ESC", remap = true, silent = true })
@@ -36,34 +37,47 @@ vim.keymap.set("i", "jk", "<Esc>", { desc = "jk to ESC", remap = true, silent = 
 -- ============================================
 -- 在插入模式下按 Ctrl+] 跳到下一个闭合括号/引号之后
 local function jump_out_of_bracket()
-  local line = vim.api.nvim_get_current_line()
-  local col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- 转为1-indexed
-  local brackets = { ")", "]", "}", ">", '"', "'", "`" }
+    local line = vim.api.nvim_get_current_line()
+    local col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- 转为1-indexed
+    local brackets = { ")", "]", "}", ">", '"', "'", "`" }
 
-  -- 在当前光标之后查找最近的闭合括号
-  local nearest_pos = nil
-  for i = col, #line do
-    local char = line:sub(i, i)
-    for _, b in ipairs(brackets) do
-      if char == b then
-        nearest_pos = i
-        break
-      end
+    -- 在当前光标之后查找最近的闭合括号
+    local nearest_pos = nil
+    for i = col, #line do
+        local char = line:sub(i, i)
+        for _, b in ipairs(brackets) do
+            if char == b then
+                nearest_pos = i
+                break
+            end
+        end
+        if nearest_pos then
+            break
+        end
     end
+
     if nearest_pos then
-      break
+        -- 移动光标到括号之后
+        vim.api.nvim_win_set_cursor(0, { vim.api.nvim_win_get_cursor(0)[1], nearest_pos })
     end
-  end
-
-  if nearest_pos then
-    -- 移动光标到括号之后
-    vim.api.nvim_win_set_cursor(0, { vim.api.nvim_win_get_cursor(0)[1], nearest_pos })
-  end
 end
 
 vim.keymap.set("i", "<C-]>", jump_out_of_bracket, { noremap = true, silent = true, desc = "Jump out of bracket" })
 
 -- 在插入模式下使用 Ctrl+Z 撤销
 vim.keymap.set("i", "<C-z>", "<cmd>undo<cr>", { desc = "Undo" })
+
 -- 在插入模式下使用 Ctrl+Y 重做
 vim.keymap.set("i", "<C-/>", "<cmd>redo<cr>", { desc = "Redo" })
+
+-- 插入模式下使用 Ctrl+e 向下滚动
+vim.keymap.set("i", "<C-e>", "<C-o><C-e>", { noremap = true, silent = true })
+
+-- 插入模式下使用 Ctrl+x 向上滚动
+vim.keymap.set("i", "<C-x>", "<C-o><C-y>", { noremap = true, silent = true })
+
+-- Normal 模式下使用 Ctrl+x 向上滚动
+vim.keymap.set("n", "<C-x>", "<C-y>", { noremap = true, silent = true })
+
+-- 插入模式下使用 Ctrl+j 向下滚动
+vim.keymap.set("i", "<C-j>", "<C-o><C-e>", { noremap = true, silent = true })
