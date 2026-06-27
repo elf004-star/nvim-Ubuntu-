@@ -16,7 +16,7 @@ vim.g.clipboard = {
         ["+"] = lemonade_path .. " --host=127.0.0.1 paste",
         ["*"] = lemonade_path .. " --host=127.0.0.1 paste",
     },
-    cache_enabled = 0,
+    cache_enabled = false,
 }
 
 -- ==========================================
@@ -28,6 +28,8 @@ require("config.lazy")
 vim.api.nvim_create_autocmd("User", {
     pattern = "VeryLazy",
     callback = function()
-        vim.o.clipboard = "unnamedplus"
+        vim.schedule(function()
+            vim.o.clipboard = "unnamedplus"
+        end)
     end,
 })
